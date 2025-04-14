@@ -125,7 +125,6 @@ let rec read t buf =
       | Ok 0 -> Lwt.return (Error `Continue)
       | Ok size ->
           Mirage_net.Stats.rx t.stats (Int64.of_int size);
-          let buf = Cstruct.sub buf 0 size in
           Lwt.return (Ok buf)
       | Error msg ->
           Log.err (fun f -> f "Error receiving: %s" msg);

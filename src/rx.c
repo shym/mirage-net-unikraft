@@ -81,7 +81,7 @@ static int netdev_rx(struct netif* netif, uint8_t *buf, unsigned *size,
   }
 
   memcpy(buf, nb->data, nb->len);
-  *size = (nb->len > 10) ? nb->len - 10 : nb->len; // FIXME
+  *size = nb->len;
   uk_netbuf_free_single(nb);
 
   return (more ? 1 : 0);
