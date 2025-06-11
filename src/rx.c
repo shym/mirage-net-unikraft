@@ -58,14 +58,14 @@ static int netdev_rx(struct netif* netif, uint8_t *buf, unsigned *size,
 
   const bool more = uk_netdev_status_more(rc);
 
-  if (bufsize < nb->len) {
-    *err = "Not enough room in buffer to write packet";
-    uk_netbuf_free_single(nb);
-    return -1;
+  if (bufsize > nb->len) {
+    bufsize = nb->len;
   }
+  /* If bufsize < nb->len, simply drop the extra trailing bytes, as they cannot
+   * be part of the packet payload or it would exceed MTU */
 
-  memcpy(buf, nb->data, nb->len);
-  *size = nb->len;
+  memcpy(buf, nb->data, bufsize);
+  *size = bufsize;
   uk_netbuf_free_single(nb);
 
   return (more ? 1 : 0);
